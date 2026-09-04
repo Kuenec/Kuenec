@@ -1,0 +1,32 @@
+name: langs
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: python3 scripts/langs.py
+        env:
+          GH_TOKEN: ${{ secrets.PROFILE_TOKEN }}
+
+      - uses: crazy-max/ghaction-github-pages@v5
+        with:
+          target_branch: output
+          build_dir: dist
+          keep_history: false
+          commit_message: "update images"
+          author: "Kuenec <kuenec44@gmail.com>"
+          committer: "Kuenec <kuenec44@gmail.com>"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
